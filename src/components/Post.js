@@ -1,28 +1,23 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { injectGlobal } from 'styled-components';
 
 import { Card } from './primitives';
 
 class Post extends React.Component {
   render() {
-    const {
-      frontmatter: { title, date },
-      excerpt
-    } = this.props.post.node;
+    const { title, date, content } = this.props.post.node;
 
     return (
       <Card
         topBarContents={
           <React.Fragment>
-            <Title>{title}</Title>
+            <Title dangerouslySetInnerHTML={{ __html: title }} />
             <Date>{date}</Date>
           </React.Fragment>
         }
         bodyStyles={{ marginTop: '-1rem', padding: '1rem' }}
       >
-        <Content>
-          <p>{excerpt}</p>
-        </Content>
+        <Content dangerouslySetInnerHTML={{ __html: content }} />
         <Footer>
           <CommentBadge count={0} />
         </Footer>
@@ -57,6 +52,19 @@ const Content = styled.article`
   font-family: sans-serif;
   font-size: 18px;
   font-weight: 400;
+  line-height: 1.6em;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0.5rem auto;
+  }
+
+  iframe {
+    display: block;
+    margin: 0.5rem auto;
+  }
 `;
 
 const Footer = styled.div`

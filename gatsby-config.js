@@ -1,51 +1,29 @@
 module.exports = {
   siteMetadata: {
-    title: 'Gatsby Starter Blog',
-    author: 'Kyle Mathews',
-    description: 'A starter blog demonstrating what Gatsby can do.',
-    siteUrl: 'https://gatsbyjs.github.io/gatsby-starter-blog/'
+    title: 'the smith family',
+    author: 'Kevin Smith',
+    description: 'Updates on our family',
+    siteUrl: 'https://www.smithbears.com'
   },
-  pathPrefix: '/gatsby-starter-blog',
+  pathPrefix: '/',
   plugins: [
     `gatsby-plugin-react-next`,
     {
-      resolve: `gatsby-source-filesystem`,
+      resolve: 'gatsby-source-wordpress',
       options: {
-        path: `${__dirname}/src/pages`,
-        name: 'pages'
+        baseUrl: 'katiegeorgiapeach.wordpress.com',
+        protocol: 'https',
+        hostingWPCOM: true,
+        useACF: false,
+        auth: {
+          wpcom_app_clientSecret:
+            'H8tf47or6fXpqemyPLkfAWfVYSj45CzldqEEAm75a2vkGN8nq7NROJpcEiVm6JqH',
+          wpcom_app_clientId: '57106',
+          wpcom_user: 'katieasmith@outlook.com',
+          wpcom_pass: 'Oboeplayer7?'
+        }
       }
     },
-    {
-      resolve: `gatsby-transformer-remark`,
-      options: {
-        plugins: [
-          {
-            resolve: `gatsby-remark-images`,
-            options: {
-              maxWidth: 590
-            }
-          },
-          {
-            resolve: `gatsby-remark-responsive-iframe`,
-            options: {
-              wrapperStyle: `margin-bottom: 1.0725rem`
-            }
-          },
-          'gatsby-remark-prismjs',
-          'gatsby-remark-copy-linked-files',
-          'gatsby-remark-smartypants'
-        ]
-      }
-    },
-    `gatsby-transformer-sharp`,
-    `gatsby-plugin-sharp`,
-    {
-      resolve: `gatsby-plugin-google-analytics`,
-      options: {
-        //trackingId: `ADD YOUR TRACKING ID HERE`,
-      }
-    },
-    `gatsby-plugin-feed`,
     `gatsby-plugin-offline`,
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-styled-components`

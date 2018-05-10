@@ -13,7 +13,7 @@ import MessageForm from '../components/MessageForm';
 class BlogIndex extends React.Component {
   render() {
     const siteTitle = get(this, 'props.data.site.siteMetadata.title');
-    const posts = get(this, 'props.data.allMarkdownRemark.edges');
+    const posts = get(this, 'props.data.allWordpressPost.edges');
 
     return (
       <div>
@@ -26,7 +26,7 @@ class BlogIndex extends React.Component {
           <MessageForm />
         </Sidebar>
         <MainContentArea>
-          {posts.map(post => <Post key={post.node.fields.slug} post={post} />)}
+          {posts.map(post => <Post key={post.node.slug} post={post} />)}
         </MainContentArea>
       </div>
     );
@@ -53,17 +53,25 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allWordpressPost {
       edges {
         node {
-          excerpt
-          fields {
-            slug
+          title
+          date(formatString: "MMMM Do, YYYY")
+          slug
+          content
+          wordpress_id
+          categories {
+            id
           }
-          frontmatter {
-            date(formatString: "DD MMMM, YYYY")
-            title
-          }
+        }
+      }
+    }
+    allWordpressCategory {
+      edges {
+        node {
+          id
+          name
         }
       }
     }

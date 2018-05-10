@@ -1,68 +1,54 @@
-const _ = require('lodash')
-const Promise = require('bluebird')
-const path = require('path')
-const { createFilePath } = require('gatsby-source-filesystem')
+// const path = require('path');
 
-exports.createPages = ({ graphql, boundActionCreators }) => {
-  const { createPage } = boundActionCreators
+// const { baseUrl } = require('./gatsby-config').plugins.find(
+//   plugin =>
+//     typeof plugin === 'object' && plugin.resolve === 'gatsby-source-wordpress'
+// ).options;
 
-  return new Promise((resolve, reject) => {
-    const blogPost = path.resolve('./src/templates/blog-post.js')
-    resolve(
-      graphql(
-        `
-          {
-            allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }, limit: 1000) {
-              edges {
-                node {
-                  fields {
-                    slug
-                  }
-                  frontmatter {
-                    title
-                  }
-                }
-              }
-            }
-          }
-        `
-      ).then(result => {
-        if (result.errors) {
-          console.log(result.errors)
-          reject(result.errors)
-        }
+// const localLink = permalink =>
+//   permalink.replace(/https?:\/\//, '').replace(baseUrl, '');
 
-        // Create blog posts pages.
-        const posts = result.data.allMarkdownRemark.edges;
+// console.log('running node api');
 
-        _.each(posts, (post, index) => {
-          const previous = index === posts.length - 1 ? null : posts[index + 1].node;
-          const next = index === 0 ? null : posts[index - 1].node;
+// exports.createPages = ({ graphql, boundActionCreators }) => {
+//   const { createPage } = boundActionCreators;
+//   console.log('in createPages');
 
-          createPage({
-            path: post.node.fields.slug,
-            component: blogPost,
-            context: {
-              slug: post.node.fields.slug,
-              previous,
-              next,
-            },
-          })
-        })
-      })
-    )
-  })
-}
+//   return new Promise((resolve, reject) => {
+//     console.log('about to call graphql');
+//     resolve(
+//       graphql(`
+//         {
+//           allWordpressPost {
+//             edges {
+//               node {
+//                 link
+//                 id
+//                 wordpress_id
+//               }
+//             }
+//           }
+//         }
+//       `).then(result => {
+//         console.log('got query result:', result);
+//         if (result.errors) {
+//           reject(result.errors);
+//         }
 
-exports.onCreateNode = ({ node, boundActionCreators, getNode }) => {
-  const { createNodeField } = boundActionCreators
-
-  if (node.internal.type === `MarkdownRemark`) {
-    const value = createFilePath({ node, getNode })
-    createNodeField({
-      name: `slug`,
-      node,
-      value,
-    })
-  }
-}
+//         result.data.allWordpressPost.edges.forEach(({ node: post }) => {
+//           console.log(
+//             'creating page at',
+//             localLink(post.link),
+//             'with component',
+//             path.resolve(`src/templates/post.js`)
+//           );
+//           createPage({
+//             path: localLink(post.link),
+//             component: path.resolve(`src/templates/post.js`),
+//             context: post
+//           });
+//         });
+//       })
+//     );
+//   });
+// };
