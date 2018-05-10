@@ -1,11 +1,43 @@
 import React from 'react';
 import styled, { injectGlobal } from 'styled-components';
+import cheerio from 'cheerio';
 
 import { Card } from './primitives';
 
+const cloudinary = src =>
+  'http://res.cloudinary.com/ksmithbaylor/image/fetch/f_auto,fl_progressive,q_auto/' +
+  src.split('?')[0];
+
 class Post extends React.Component {
+  constructor(props) {
+    super(props);
+    this.cachedContent = null;
+    this.modifiedContent = this.modifiedContent.bind(this);
+  }
+
+  modifiedContent() {
+    if (this.cachedContent) {
+      return this.cachedContent;
+    }
+
+    const $ = cheerio.load(this.props.post.node.content);
+    $('img').each(function(i, elem) {
+      const $image = $(this);
+      const src = $image.attr('src');
+      const imgTag = `<img data-src="${cloudinary(src)}" />`;
+      const $strippedImage = $(
+        `${imgTag}<noscript>${imgTag.replace('data-src', 'src')}</noscript>`
+      );
+      $image.replaceWith($strippedImage);
+    });
+
+    this.cachedContent = $.html();
+    return this.cachedContent;
+  }
+
   render() {
-    const { title, date, content } = this.props.post.node;
+    const { title, date } = this.props.post.node;
+    const content = this.modifiedContent();
 
     return (
       <Card

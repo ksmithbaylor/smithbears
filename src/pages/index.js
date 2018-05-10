@@ -11,6 +11,17 @@ import Years from '../components/Years';
 import MessageForm from '../components/MessageForm';
 
 class BlogIndex extends React.Component {
+  componentDidMount() {
+    require.ensure(
+      ['vanilla-lazyload'],
+      () => {
+        const LazyLoad = require('vanilla-lazyload');
+        new LazyLoad();
+      },
+      'vanilla-lazyload-chunk'
+    );
+  }
+
   render() {
     const siteTitle = get(this, 'props.data.site.siteMetadata.title');
     const posts = get(this, 'props.data.allWordpressPost.edges');
